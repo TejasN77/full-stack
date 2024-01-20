@@ -68,16 +68,56 @@ const IssueRow = (props) => {
     const rowStyle = props.rowStyle;
     const issue = props.issue;
 
-    console.log(issue);
+    const created =
+        issue.created !== undefined
+            ? issue.created.getMonth() +
+              "-" +
+              issue.created.getDay() +
+              "-" +
+              issue.created.getYear()
+            : "Date not defined";
+
+    const due = issue.due
+        ? issue.due.getMonth() +
+          "-" +
+          issue.due.getDay() +
+          "-" +
+          issue.due.getYear()
+        : "Date not defined";
 
     // const {rowStyle, issue} = props;
 
+    if (props.issue === undefined) return <h3>IssueRow</h3>;
     return (
         <tr>
-            <td style={rowStyle}>{issue.id}</td>
+            {Object.entries(issue).map((value, i) => {
+                if (value[0] === "created") {
+                    return (
+                        <td key={i} style={rowStyle}>
+                            {created}
+                        </td>
+                    );
+                }
+                if (value[0] === "due") {
+                    return (
+                        <td key={i} style={rowStyle}>
+                            {due}
+                        </td>
+                    );
+                }
+                return (
+                    <td key={i} style={rowStyle}>
+                        {value[1]}
+                    </td>
+                );
+            })}
+            {/* <td style={rowStyle}>{issue.id}</td>
             <td style={rowStyle}>{issue.status}</td>
             <td style={rowStyle}>{issue.owner}</td>
             <td style={rowStyle}>{issue.effort}</td>
+            <td style={rowStyle}>{created}</td>
+            <td style={rowStyle}>{due}</td>
+            <td style={rowStyle}>{issue.title}</td> */}
         </tr>
     );
 };
@@ -116,13 +156,18 @@ const IssueTable = () => {
         <table>
             <thead>
                 <tr>
-                    <th style={rowStyle}>ID</th>
+                    {Object.keys(issues[0]).map((title) => (
+                        <th key={title} style={rowStyle}>
+                            {title}
+                        </th>
+                    ))}
+                    {/* <th style={rowStyle}>ID</th>
                     <th style={rowStyle}>Status</th>
                     <th style={rowStyle}>Owner</th>
                     <th style={rowStyle}>Effort</th>
                     <th style={rowStyle}>Created</th>
                     <th style={rowStyle}>Due</th>
-                    <th style={rowStyle}>Title</th>
+                    <th style={rowStyle}>Title</th> */}
                 </tr>
             </thead>
             <tbody>{issueRows}</tbody>
@@ -143,6 +188,7 @@ class IssueList extends React.Component {
         return (
             <>
                 <IssueTable />
+                {/* <IssueRow /> */}
             </>
         );
     }

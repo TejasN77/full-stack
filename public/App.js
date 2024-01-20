@@ -67,19 +67,30 @@ const IssueFilter = () => {
 const IssueRow = props => {
   const rowStyle = props.rowStyle;
   const issue = props.issue;
-  console.log(issue);
+  const created = issue.created !== undefined ? issue.created.getMonth() + "-" + issue.created.getDay() + "-" + issue.created.getYear() : "Date not defined";
+  const due = issue.due ? issue.due.getMonth() + "-" + issue.due.getDay() + "-" + issue.due.getYear() : "Date not defined";
 
   // const {rowStyle, issue} = props;
 
-  return /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("td", {
-    style: rowStyle
-  }, issue.id), /*#__PURE__*/React.createElement("td", {
-    style: rowStyle
-  }, issue.status), /*#__PURE__*/React.createElement("td", {
-    style: rowStyle
-  }, issue.owner), /*#__PURE__*/React.createElement("td", {
-    style: rowStyle
-  }, issue.effort));
+  if (props.issue === undefined) return /*#__PURE__*/React.createElement("h3", null, "IssueRow");
+  return /*#__PURE__*/React.createElement("tr", null, Object.entries(issue).map((value, i) => {
+    if (value[0] === "created") {
+      return /*#__PURE__*/React.createElement("td", {
+        key: i,
+        style: rowStyle
+      }, created);
+    }
+    if (value[0] === "due") {
+      return /*#__PURE__*/React.createElement("td", {
+        key: i,
+        style: rowStyle
+      }, due);
+    }
+    return /*#__PURE__*/React.createElement("td", {
+      key: i,
+      style: rowStyle
+    }, value[1]);
+  }));
 };
 const IssueTable = () => {
   const issues = [{
@@ -111,21 +122,10 @@ const IssueTable = () => {
   // [<IssueRow rowStyle={rowStyle} issue={issue} />,
   // <IssueRow rowStyle={rowStyle} issue={issue} />]
 
-  return /*#__PURE__*/React.createElement("table", null, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, /*#__PURE__*/React.createElement("th", {
+  return /*#__PURE__*/React.createElement("table", null, /*#__PURE__*/React.createElement("thead", null, /*#__PURE__*/React.createElement("tr", null, Object.keys(issues[0]).map(title => /*#__PURE__*/React.createElement("th", {
+    key: title,
     style: rowStyle
-  }, "ID"), /*#__PURE__*/React.createElement("th", {
-    style: rowStyle
-  }, "Status"), /*#__PURE__*/React.createElement("th", {
-    style: rowStyle
-  }, "Owner"), /*#__PURE__*/React.createElement("th", {
-    style: rowStyle
-  }, "Effort"), /*#__PURE__*/React.createElement("th", {
-    style: rowStyle
-  }, "Created"), /*#__PURE__*/React.createElement("th", {
-    style: rowStyle
-  }, "Due"), /*#__PURE__*/React.createElement("th", {
-    style: rowStyle
-  }, "Title"))), /*#__PURE__*/React.createElement("tbody", null, issueRows));
+  }, title)))), /*#__PURE__*/React.createElement("tbody", null, issueRows));
 };
 // class IssueAdd extends React.Component {
 //     render() {
